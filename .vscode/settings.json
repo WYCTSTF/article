@@ -1,0 +1,15 @@
+{
+  "background.enabled": false,
+  "background.useDefault": false,
+  "background.customImages": [
+    //     // 双叶老婆
+    // "file:///Users/syh/Documents/Graph/shuangye2.png",
+    //     // 九条可怜
+    //     // "file:///Users/syh/Documents/Graph/haskell2.jpg",
+    //     // 魈宝
+    //     // "file:///Users/syh/Documents/Graph/xiao1.jpg",
+    // "file:///Users/syh/Documents/Graph/shuangye2.png",
+    //     // Haskell
+        // "file:///Users/syh/Documents/Graph/haskell2.png",
+  ],
+}

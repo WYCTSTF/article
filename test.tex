@@ -1,0 +1,239 @@
+\documentclass{beamer}
+
+\usepackage[english]{babel}
+\usepackage[UTF8]{ctex}              %lualatex用ctex
+% \usepackage[utf8]{inputenc} 
+
+%插入代码
+
+\usepackage{listings}
+\usepackage{xcolor}
+% 定义可能使用到的颜色
+\definecolor{CPPLight}  {HTML} {686868}
+\definecolor{CPPSteel}  {HTML} {888888}
+\definecolor{CPPDark}   {HTML} {262626}
+\definecolor{CPPBlue}   {HTML} {4172A3}
+\definecolor{CPPGreen}  {HTML} {487818}
+\definecolor{CPPBrown}  {HTML} {A07040}
+\definecolor{CPPRed}    {HTML} {AD4D3A}
+\definecolor{CPPViolet} {HTML} {7040A0}
+\definecolor{CPPGray}  {HTML} {B8B8B8}
+\lstset{
+    columns=fixed,       
+    numbers=left,                                        % 在左侧显示行号
+    frame=none,                                          % 不显示背景边框
+    backgroundcolor=\color[RGB]{245,245,244},            % 设定背景颜色
+    keywordstyle=\color[RGB]{40,40,255},                 % 设定关键字颜色
+    numberstyle=\footnotesize\color{darkgray},           % 设定行号格式
+    commentstyle=\it\color[RGB]{0,96,96},                % 设置代码注释的格式
+    stringstyle=\rmfamily\slshape\color[RGB]{128,0,0},   % 设置字符串格式
+    showstringspaces=false,                              % 不显示字符串中的空格
+    language=c++,                                        % 设置语言
+    morekeywords={alignas,continute,friend,register,true,alignof,decltype,goto,
+    reinterpret_cast,try,asm,defult,if,return,typedef,auto,delete,inline,short,
+    typeid,bool,do,int,signed,typename,break,double,long,sizeof,union,case,
+    dynamic_cast,mutable,static,unsigned,catch,else,namespace,static_assert,using,
+    char,enum,new,static_cast,virtual,char16_t,char32_t,explict,noexcept,struct,
+    void,export,nullptr,switch,volatile,class,extern,operator,template,wchar_t,
+    const,false,private,this,while,constexpr,float,protected,thread_local,
+    const_cast,for,public,throw,std},
+    emph={map,set,multimap,multiset,unordered_map,unordered_set,
+    unordered_multiset,unordered_multimap,vector,string,list,deque,
+    array,stack,forwared_list,iostream,memory,shared_ptr,unique_ptr,
+    random,bitset,ostream,istream,cout,cin,endl,move,default_random_engine,
+    uniform_int_distribution,iterator,algorithm,functional,bing,numeric,},
+    emphstyle=\color{CPPViolet}, 
+}
+
+% customize your own color and navigation
+\usetheme[RGB={12 72 66}]{Simple} % color
+\useoutertheme{miniframes}              % navigation
+
+% \usetheme{Berlin}
+% \usecolortheme{beaver}
+% \input{pkgs.tex}
+
+\author{沈宇昊}
+\title{LUT-XCPC Day 1 语法\&基础数据结构}
+\date{\today}
+\institute{兰州理工大学}
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+  % \maketitle
+
+  % \tableofcontents
+  
+  \frame[plain]{\titlepage}
+  
+  % \begin{frame}
+  %   \frametitle{Content}
+  %   \tableofcontents % 这个命令将会显示目录
+  % \end{frame}
+  
+  \section{前置}
+
+  % \frame[plain]{\section{前置}}
+
+  \begin{frame}
+    \frametitle{知识准备}
+    基础的递归、模拟
+
+    基本时间复杂度会看，有概念
+
+    会写暴力
+
+    视情况而定，哪里需要补充哪里的知识，临时讲一下即可
+  \end{frame}
+  \begin{frame}
+    \frametitle{资料 \& 训练方式}
+    \href{https://en.cppreference.com/w/}{C++ Reference}
+
+    \href{https://oi-wiki.org/}{OI Wiki}
+
+    知乎
+
+    每场CF的题解 \& 评论区，大佬的过题代码
+
+    \vspace*{1\baselineskip}
+    
+    上述有不懂的进一步百度 | Google、交流，主要是坚持做题
+    
+    \vspace*{1\baselineskip}
+    
+    各种比赛省赛级别获奖对比赛经验和知识准备要求不高，当然之后如果甘肃有ICPC的省赛，和兰大同台竞技另说、、
+    
+    \vspace*{1\baselineskip}
+
+    像ZJ等省份，XCPC有省赛，拿金的难度可能还要大于区域银
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{题单}
+    \href{https://www.luogu.com.cn/training/list?type=official&page=1}{洛谷官方题单}
+
+    \href{https://www.luogu.com.cn/training/2018}{2020,2021CF简单题精选} 适合有基础之后提高
+
+    \vspace*{1\baselineskip}
+    
+    \href{https://www.luogu.com.cn/training/9376}{搜索题单}
+    
+    \vspace*{1\baselineskip}
+    
+    关于做题和看题解.. 不会做看题解是正常的，尽量是一点点看，理解思路，然后尝试自己写出，不行再看代码，理解了之后再写，注意抄题解和看题解的区分，没有太多思考内容的题一般10-15min
+  \end{frame}
+
+  \section{cpp98 \texorpdfstring{$\to$} cpp11}
+
+  \begin{frame}  
+    \frametitle{summary}
+    特定函数的部分主要看的是这篇
+    \href{https://www.luogu.com.cn/blog/AccRobin/grammar-candies}{洛谷日报}
+  
+    \vspace*{2\baselineskip}
+  
+    模板，别的各种内容来自平时整理
+  
+  \end{frame}
+  
+  \begin{frame}
+    % \frametitle{'algorithm库'}
+    \frametitle{algorithm库}
+    常见的函数有swap,sort,unique,reverse,lower\_bound,upper\_bound等...
+    
+    一些别的函数
+
+    std::find
+
+    std::fill 一般用来弥补memset不能赋值的问题
+
+    std::max\_element | min\_element (bg, ed) 第三个参数可传入比较函数
+
+    std::count(bg,ed,val)
+  
+    std::count\_if(bg,ed,func) 常用func有isdigit,islower,isupper等
+
+    std::for\_each(bg, ed, func)
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{numeric库}
+    \begin{block}{std::accumulate(bg, ed, val)}
+      可以用于序列求和，注意传参时val的类型避免溢出，第四个参数可以作为加法
+    \end{block}
+
+    \begin{block}{std::partial\_sum(bg1, ed1, bg2)}
+      用于求前缀和，可以传入第四个参数作加法
+    \end{block}
+
+    \begin{block}{std::adjacent\_difference(bg1, ed1, bg2)}
+      用于求差分，可以传入第四个参数作减法
+    \end{block}
+    
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{cmath库}
+      \begin{block}{exp(x)}
+        返回 $e^x$，$x$的有效范围是 $[−708.4,709.8]$
+      \end{block}
+
+      \begin{block}{log(x)}
+        返回 $\ln{x}$，在 $x\leq0$时候报错，别的还有$log10$和$log2$，其中$log2$为C++11开始才有
+      \end{block}
+
+      floor 取上整
+
+      ceil 取下整
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{GNU}
+
+    这些内容不在C++标准中，如clang等其他编译器里可能没有，一般比赛提供的编译器都是GUN C++，也就是你们dev里面自带的mingw(Minimalist GNU for Windows)
+    
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{GNU}
+
+    \begin{block}{\_\_builtin 函数}
+
+      \_\_builtin\_popcount(x) 统计二进制下x中1的个数
+
+      \vspace*{1\baselineskip}
+      
+      \_\_builtin\_parity(x) 统计二进制下x中1个数的奇偶性
+      
+      \vspace*{1\baselineskip}
+      
+      \_\_builtin\_ffs(x) 统计二进制下最后一个1是从左往右第几位
+      
+      \vspace*{1\baselineskip}
+      
+      \_\_builtin\_ctz(x) 返回二进制下后导0的个数
+      
+      \vspace*{1\baselineskip}
+      
+      \_\_builtin\_clz(x) 返回二进制下前导0的个数
+    \end{block}
+    
+  \end{frame}
+
+  % \begin{frame}
+  %   \frametitle{Test}
+  %   QAQ\\
+  %   \pause
+  %   QwQ\\
+  %   \pause
+  %   QvQ
+  % \end{frame}
+\end{document}
