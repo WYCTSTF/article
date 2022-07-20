@@ -86,16 +86,25 @@
 
   % \tableofcontents
   
+
+  % title
   % \frame[plain]{\titlepage}
-  
+  \begin{frame}[plain]
+    \maketitle
+    \begin{figure}[htbp] %H为当前位置，!htb为忽略美学标准，htbp为浮动图形
+    \centering %图片居中
+    \includegraphics[width=0.3\textheight,height=0.2\textwidth]{new- 2.jpg} %插入图片，[]中设置图片大小，{}中是图片文件名
+    % \caption{双叶天下第一可爱} %最终文档中希望显示的图片标题
+    % \label{Fig.main2} %用于文内引用的标签
+    \end{figure}
+  \end{frame}
+
   % \begin{frame}
   %   \frametitle{Content}
   %   \tableofcontents % 这个命令将会显示目录
   % \end{frame}
   
   \section{前置}
-
-  % \frame[plain]{\section{前置}}
 
   \begin{frame}
     \frametitle{知识准备}
@@ -476,12 +485,10 @@ std::vector a(n, std::vector<int>(m, 1));
     \frametitle{单调栈}
     看一道题
 
-    以洛谷\href{https://www.luogu.com.cn/problem/P2422}{[P2422 良好的感觉]}为例
-
     \begin{block}{题意}
       给定长为n的数列a，令$n\leq 10^5,a_i\leq 10^9$
   
-      $sum=(r-l+1)*Min,Min=min\{a_i\mid i\in [l,r]\}$，要求$sum$的最大值
+      $\mathtt{sum=(r-l+1)*Min,Min=min\{a_i\mid i\in [l,r]\}}$，要求$\mathtt{sum}$的最大值
 
     \end{block}
     \pause
@@ -502,7 +509,8 @@ std::vector a(n, std::vector<int>(m, 1));
     \pause
     
     \vspace*{1\baselineskip}
-    动手逝世
+
+    自己动手试试！
   \end{frame}
 
   \begin{frame}
@@ -564,11 +572,84 @@ deque<pair<int,int>>
 
   \begin{frame}
     \frametitle{倍增 \& ST表}
+    \href{https://www.luogu.com.cn/problem/P3865}{ST表模板题}
+
+    \vspace*{1\baselineskip}
+
+    \begin{block}{题意}
+      给定$n,m$和不会改变的数组$a\{n\}$，以及$m$个询问
+
+      每次询问给定一个l,r，要求出a[l] - a[r]中的最大值，
+      $n\leq 10^5$,$m\leq 2*10^6,a_i\in[0,10^9]$
+    \end{block}
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{倍增 \& ST表}
+
+    如果我们知道了两个区间$[l,r]$和$[L,R]$的最大值，
+    这里不妨设$l \leq L \leq r \leq R$
+    ，那么就可以得到一个更大的区间,$[l,R]$中的最值
+
+    \pause
+
+    \vspace*{1\baselineskip}
+
+    我们在有了预处理基础的条件上，这里就是a[i]=0
+    ，然后传递关系的时候成倍增长，即
+    \begin{align*}
+      \mathtt{max\{a[l,l+2^i-1]\}=max(}
+      &\mathtt{max\{a[l,l+2^{i-1}-1]\},} \\
+      & \mathtt{max\{a[l+2^{i-1},l+2^i-1]\})}
+    \end{align*}
+
+    我们设$\mathtt{f[i][j]}$表示 $\mathtt{[l,l+2^j-1]}$中的最大值，
+    显然有
+    $\mathtt{f[i][j]=max\{f[i][j-1],f[i+2^{j-1}][j-1]\}}$
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{倍增 \& ST表}
+    \begin{block}{如何查询}
+      对于给定的[L,R]，我们要怎么查询最值？
+    \end{block}
+
+    \pause
+
+    预处理 $\mathtt{log_2}$ 数组，或者调函数，
+    令 $\mathtt{d=log_2{(R-L+1)}}$
+
+    询问$\mathtt{max(f[L][d],f[L+2^d][d])}$即可
+
+    \vspace*{1\baselineskip}
+    
+    这种预处理信息时成倍增长的手段，就叫倍增
+
+    \vspace*{1\baselineskip}
+
+    \href{http://syh521.cn/file/st-table.cpp}{代码}
+
+    注意C++中位运算的优先级比加减要低，不确定时加上括号
   \end{frame}
 
 
   \begin{frame}
-    \frametitle{另一种解法}
+    \frametitle{另一种解法-ST表}
+    回过去看 最大子矩形面积 这个问题，
+    找到最小值作为决定的边界，然后递归两边
+
+    每个数都会作为区间最小值被计算一次，总复杂度就是ST表的复杂度，
+    预处理$\mathtt{O(NlogN)}$，查询$\mathtt{O(1)}$
+
+    \vspace*{1\baselineskip}
+
+    \href{http://syh521.cn/file/another-1.cpp}{随便糊的代码}，
+    就测了下小数据，因为HDOJ好像只有C++98能用，感兴趣的同学可以自己
+    去写写试试，我懒得改了
+
+    这也是个很好的例子，如何把各种STL运用起来
+
+
   \end{frame}
 
   \begin{frame}
@@ -577,11 +658,14 @@ deque<pair<int,int>>
 
   \begin{frame}
     \frametitle{堆}
-    
+      根据时间和观众意愿决定讲不讲
+
+      用OI-wiki和写过的博客凑合一下，这里不写内容了..
   \end{frame}
 
   \begin{frame}
     \frametitle{并查集}
+      同上
   \end{frame}
 
   \section{作业}
@@ -601,7 +685,7 @@ deque<pair<int,int>>
   \begin{frame}[fragile]
     \frametitle{格式要求}
 
-    写解题报告，每道题要有题目链接、对应思考、代码
+    写解题报告，每道题要有题目链接｜来源、解题思路(随便写两句说的对就行)、代码
 
     \vspace*{1\baselineskip}
     
@@ -609,7 +693,7 @@ deque<pair<int,int>>
 
     \vspace*{1\baselineskip}
 
-    没有数量要求，一周交，自愿为主
+    没有数量要求，一周交，自愿为主，只做题不写也可
   \end{frame}
 
 \end{document}
