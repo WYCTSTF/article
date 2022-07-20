@@ -1,12 +1,17 @@
 \documentclass{beamer}
 
+
+
 \usepackage[english]{babel}
 \usepackage[UTF8]{ctex}              %lualatex用ctex
 % \usepackage[utf8]{inputenc} 
 
-%插入代码
 
+
+%插入代码
 \usepackage{listings}
+\usepackage{fontspec}
+\setmonofont{Monaco}
 \usepackage{xcolor}
 % 定义可能使用到的颜色
 \definecolor{CPPLight}  {HTML} {686868}
@@ -20,7 +25,6 @@
 \definecolor{CPPGray}  {HTML} {B8B8B8}
 \lstset{
     columns=fixed,       
-    numbers=left,                                        % 在左侧显示行号
     frame=none,                                          % 不显示背景边框
     backgroundcolor=\color[RGB]{245,245,244},            % 设定背景颜色
     keywordstyle=\color[RGB]{40,40,255},                 % 设定关键字颜色
@@ -42,19 +46,30 @@
     array,stack,forwared_list,iostream,memory,shared_ptr,unique_ptr,
     random,bitset,ostream,istream,cout,cin,endl,move,default_random_engine,
     uniform_int_distribution,iterator,algorithm,functional,bing,numeric,},
-    emphstyle=\color{CPPViolet}, 
+    emphstyle=\color{CPPViolet},
+    basicstyle=\footnotesize\ttfamily,
 }
 
+
+
+\usepackage{graphicx} %插入图片的宏包
+\usepackage{float} %设置图片浮动位置的宏包
+\usepackage{subfigure} %插入多图时用子图显示的宏包
+
+
+
+%Theme
 % customize your own color and navigation
 \usetheme[RGB={12 72 66}]{Simple} % color
 \useoutertheme{miniframes}              % navigation
-
 % \usetheme{Berlin}
 % \usecolortheme{beaver}
 % \input{pkgs.tex}
 
-\author{沈宇昊}
-\title{LUT-XCPC Day 1 语法\&基础数据结构}
+
+
+\author{syh.hs}
+\title{LUT-XCPC Day 1 语法\&基础算法-1}
 \date{\today}
 \institute{兰州理工大学}
 
@@ -67,12 +82,11 @@
 }
 
 \begin{document}
-
   % \maketitle
 
   % \tableofcontents
   
-  \frame[plain]{\titlepage}
+  % \frame[plain]{\titlepage}
   
   % \begin{frame}
   %   \frametitle{Content}
@@ -94,7 +108,7 @@
     视情况而定，哪里需要补充哪里的知识，临时讲一下即可
   \end{frame}
   \begin{frame}
-    \frametitle{资料 \& 训练方式}
+    \frametitle{训练}
     \href{https://en.cppreference.com/w/}{C++ Reference}
 
     \href{https://oi-wiki.org/}{OI Wiki}
@@ -105,7 +119,7 @@
 
     \vspace*{1\baselineskip}
     
-    上述有不懂的进一步百度 | Google、交流，主要是坚持做题
+    上述有不懂的进一步百度 | Google、交流，主要是坚持做题，少做水题、一眼题
     
     \vspace*{1\baselineskip}
     
@@ -131,9 +145,9 @@
     关于做题和看题解.. 不会做看题解是正常的，尽量是一点点看，理解思路，然后尝试自己写出，不行再看代码，理解了之后再写，注意抄题解和看题解的区分，没有太多思考内容的题一般10-15min
   \end{frame}
 
-  \section{cpp98 \texorpdfstring{$\to$} cpp11}
+  \section{cpp98 \texorpdfstring{$\to$}\ cpp11}
 
-  \begin{frame}  
+  \begin{frame}
     \frametitle{summary}
     特定函数的部分主要看的是这篇
     \href{https://www.luogu.com.cn/blog/AccRobin/grammar-candies}{洛谷日报}
@@ -145,7 +159,6 @@
   \end{frame}
   
   \begin{frame}
-    % \frametitle{'algorithm库'}
     \frametitle{algorithm库}
     常见的函数有swap,sort,unique,reverse,lower\_bound,upper\_bound等...
     
@@ -228,12 +241,375 @@
     
   \end{frame}
 
-  % \begin{frame}
-  %   \frametitle{Test}
-  %   QAQ\\
-  %   \pause
-  %   QwQ\\
-  %   \pause
-  %   QvQ
-  % \end{frame}
+  \begin{frame}
+    \frametitle{..}
+      大多函数其实也没啥用，主要是压行，节省时间
+
+      Codeforces打多了就能感受到
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{lambda表达式}
+    \begin{block}{example}
+      作用是提供一个匿名函数
+      
+      sort(a.begin(), a.end(), [\&](type a, type b) {return ..});
+
+      这里与手写一个cmp填入作用相同
+    \end{block}
+
+    \begin{block}{definition}
+      [ captures ] ( params ) specifiers(可选) -> ret(可选) { body }
+      captures：捕获外部变量列表。
+
+      params：形参列表。
+      
+      specifiers：指定符序列。C++11 中常用的为 mutable（允许 body 修改以值捕获的参数）。
+      
+      ret：返回类型。若省略则由函数的 return 语句所隐含（或如函数不返回任何值则为 void）。
+      
+      body：函数体。
+    \end{block}
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{lambda表达式}
+    竞赛里一般不考虑specifier
+
+    \begin{block}{example}
+      \begin{lstlisting}
+int factorA = 1, factorB = 3;
+std::vector<int> c(10);
+std::iota(c.begin(), c.end(), 0);
+for (auto it = c.begin(); it != c.end(); ++it)
+  std::cout << *it << " \n"[it == std::prev(c.end())];
+for_each(c.begin(), c.end(), [&](int &x) {
+  x += factorA & factorB;
+});
+for (auto it : c)
+  std::cout << it << ' ';
+        
+      \end{lstlisting}
+
+    \end{block}
+
+    提一嘴vector<bool>，这个东西不建议使用，具体原因知乎搜索
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{lambda表达式}
+    另一种方式是关于递归，如何调用自己的问题
+    \begin{block}{example}
+      \begin{lstlisting}
+auto sum = [](auto self, int x) -> int {
+  return x == 1 ? 1 : x + self(self, x - 1);
+};
+
+std::cout << sum(sum, 10);
+      \end{lstlisting}
+
+      一种方法是用固定的auto格式
+      
+      不过记得标明类型，否则可能自动推导失败
+
+      而且从c++14开始才支持lambda中参数类型有auto，所以如果你要是c++11这么写递归就完了，比方说某绿桥杯、、
+    \end{block}
+
+    更多内容移步 \href{https://oi-wiki.org/lang/lambda}{OI-wiki lambda表达式}
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{lambda表达式}
+
+    因为上述问题，所以我们想要在C++11中使用lambda的递归，需要用std::function封装该匿名函数
+
+    \begin{block}{example}
+      \begin{lstlisting}
+std::function<int(int)> f = [&](int x) -> int {
+  return x == 1 ? 1 : x + f(x - 1);
+};
+std::cout << f(3);
+      \end{lstlisting}      
+    \end{block}
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{随机数 \& shuffle}
+    \begin{block}{definition}
+  
+      mt19937是一个随机数生成器类
+
+      shuffle 需要提供头尾迭代器和一个随机数生成器作为参数
+
+      随机数生成器需要一个种子来产生一个随机数，种子不同，随机结果才会不同
+
+      一般用1970年(Unix纪元)至今秒数作为种子
+      
+      \begin{lstlisting}  
+std::vector<int> a(10);
+std::iota(a.begin(), a.end(), 0);
+std::mt19937 myrand(time(0));
+std::shuffle(a.begin(), a.end(), myrand);
+for (auto it : a)
+  std::cout << it << ' ';
+      \end{lstlisting}
+    \end{block}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{模板}
+      \begin{block}{关于template}
+        知道template<typename T> $\mid$ template<class T>
+        这两种比较基本的形式就可以，更多的知识和一些魔法技巧自行了解
+      \end{block}
+  \end{frame}
+
+  \section{cpp14 \texorpdfstring{$\to$}\ cpp17}
+
+  \begin{frame}[fragile]
+    \frametitle{零碎的语法糖}
+    \begin{block}{eg.}
+      C++14中 auto可以作为普通函数的返回值
+  
+      C++17中 支持结构化绑定
+  
+      搭配 range-for 使用：
+      \begin{lstlisting}
+vector<pair<int, int>> v(n);
+for (auto&[x,y] : v) cin>>x>>y;
+      \end{lstlisting}
+
+      用于带权图的遍历
+
+      C++17中支持省略类型的vector初始化方式
+      例如
+      \begin{lstlisting}
+int n, m;
+std::cin >> n >> m;
+std::vector a(n, std::vector<int>(m, 1));
+      \end{lstlisting}
+    \end{block}
+  \end{frame}
+
+  \begin{frame}
+    如果有想了解C++17的可以看
+
+    C++17 in Detail
+  \end{frame}
+
+  \section{基础数据结构}
+
+  \begin{frame}
+    \frametitle{扯淡}
+
+    语言特性的权重在竞赛学习中很低，只能起到锦上添花的作用，关键还是把题目做出来
+
+    \vspace*{1\baselineskip}
+
+    还有就是关于贪心、DP这一类思维题，最好直接Codeforces找greedy dp的标签，按照自身rating+200分的题开始做，别在概括性的套话和水题上纠结
+
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{扯淡}
+
+    模拟题、字符串题怎么训练？
+
+    \vspace*{1\baselineskip}
+
+    打开Codeforces，点开Problem Set，加上对应tag，找合适分段的题目做
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{前缀和\&差分}
+
+    \begin{block}{前缀和}
+      pre[i] = pre[i-1] + a[i]
+      
+      或者
+
+      pre[i] = pre[i-1] xor a[i]
+    \end{block}
+
+    \begin{block}{二维前缀和}
+      pre[i][j] = pre[i-1][j]+pre[i][j-1]-pre[i-1][j-1]+a[i][j]
+    \end{block}
+
+    \begin{block}{差分}
+      minus[i] = a[i] - a[i-1]
+    \end{block}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{前缀和\&差分}
+    还有树上差分+倍增等各种结合做法
+
+    \vspace*{1\baselineskip}
+  \end{frame}
+
+  \begin{frame}
+
+    开始单调线性结构，别的内容还有很多，有经验了之后自己去看wiki看文档吧..
+    
+    \vspace*{1\baselineskip}
+
+    \frametitle{单调栈}
+
+    (看情况给5-10min思考..)
+
+    其实比较局限，只能解决一类很固定的问题
+
+    因此也很容易看出来233
+
+    \vspace*{1\baselineskip}
+    
+    \href{https://www.luogu.com.cn/problem/P5788}{模板题}
+
+    \vspace*{1\baselineskip}
+
+    \href{http://syh521.cn/file/monotone-stack.cpp}{对应代码}
+  \end{frame}
+
+  \begin{frame}
+
+
+    \frametitle{单调栈}
+    看一道题
+
+    以洛谷\href{https://www.luogu.com.cn/problem/P2422}{[P2422 良好的感觉]}为例
+
+    \begin{block}{题意}
+      给定长为n的数列a，令$n\leq 10^5,a_i\leq 10^9$
+  
+      $sum=(r-l+1)*Min,Min=min\{a_i\mid i\in [l,r]\}$，要求$sum$的最大值
+
+    \end{block}
+    \pause
+    问题的实质是啥
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{单调栈}
+    
+    对于每个i，我们希望找到对应的[l,r]，保证a[l],a[l+1],$\cdots$,a[r]都大于等于a[i]
+
+    \pause
+
+    \vspace*{1\baselineskip}
+    
+    不难意识到两个单调栈就能解决该问题
+    
+    \pause
+    
+    \vspace*{1\baselineskip}
+    动手逝世
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{单调队列}
+
+    \href{https://www.luogu.com.cn/problem/P1886}{模板题}
+
+    \begin{block}{题意}
+      给定长为$n$的序列$a$，以及一个$k$，窗口从$[1,k]$一直滑动到$[n-k+1,n]$
+
+      我们想知道每次窗口内的最大 / 最小值
+    \end{block}
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{单调队列}
+    以求解最大值为例
+
+    可以发现，当前区间内靠后的，偏大的数字，比靠前的且偏小的数字要好，我们可以不保存后者
+
+    \pause
+
+    \vspace*{1\baselineskip}
+
+    如果要保存靠前的数字，那么一定是他比后面的数字大
+
+    \pause
+
+    那么像是搞一个单调递减，下标递增的序列，类似
+    \begin{lstlisting}
+deque<pair<int,int>>
+    \end{lstlisting}
+    ，来维护区间最大值
+
+    \pause
+
+    对于新来的一个数$x$
+    ，我们要不停的扔掉队列末端比$x$小的数，因为那些已经没有了保存的价值
+    ，这样就维护了一个单调性
+
+    \vspace*{1\baselineskip}
+
+    同时检索头部的元素是否还在区间内，不在就pop掉
+  \end{frame}
+
+  \begin{frame}
+    “如果一个选手比你小还比你强，你就可以退役了。”
+    \rightline{——单调队列原理[doge]}
+    
+    \vspace*{1\baselineskip}
+    
+    \href{http://syh521.cn/file/monotone-queue.cpp}{代码}
+    
+    \vspace*{1\baselineskip}
+
+    单调队列可以维护左右端点都向一个方向移动时的区间最值，
+    这个性质常用来做动态规划的优化
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{倍增 \& ST表}
+  \end{frame}
+
+
+  \begin{frame}
+    \frametitle{另一种解法}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{另一种解法}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{堆}
+    
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{并查集}
+  \end{frame}
+
+  \section{作业}
+  \begin{frame}
+    \frametitle{写题}
+    Codeforces Div.2 / Div. 3泛做，无难度要求，自己看着搞
+
+    \vspace*{1\baselineskip}
+    
+    洛谷或其他平台上相关题目的练习
+
+    \vspace*{1\baselineskip}
+
+    晚上抽出时间打CF，如果早睡早起的可以virtual participation
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{格式要求}
+
+    写解题报告，每道题要有题目链接、对应思考、代码
+
+    \vspace*{1\baselineskip}
+    
+    可以是word，\LaTeX/Markdown生成pdf，博客，acwing打卡等任意形式
+
+    \vspace*{1\baselineskip}
+
+    没有数量要求，一周交，自愿为主
+  \end{frame}
+
 \end{document}
