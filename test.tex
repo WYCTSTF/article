@@ -69,7 +69,7 @@
 
 
 \author{syh.hs}
-\title{LUT-XCPC Day 1 语法\&基础算法-1}
+\title{LUT-ICPC Day 1 语法\&基础算法-1}
 \date{\today}
 \institute{兰州理工大学}
 
@@ -317,15 +317,18 @@ auto sum = [](auto self, int x) -> int {
 std::cout << sum(sum, 10);
       \end{lstlisting}
 
-      一种方法是用固定的auto格式
-      
-      不过记得标明类型，否则可能自动推导失败
-
-      而且从c++14开始才支持lambda中参数类型有auto，所以如果你要是c++11这么写递归就完了，比方说某绿桥杯、、
     \end{block}
 
-    更多内容移步 \href{https://oi-wiki.org/lang/lambda}{OI-wiki lambda表达式}
+    一种方法是用固定的auto格式
+    
+    不过记得标明类型，否则可能自动推导失败
+
+    \vspace*{1\baselineskip}
+
+    而且从c++14开始才支持lambda中参数类型有auto，
+    所以如果你要是c++11这么写递归就完了，比方说某绿桥杯、、
   \end{frame}
+
 
   \begin{frame}[fragile]
     \frametitle{lambda表达式}
@@ -340,7 +343,11 @@ std::function<int(int)> f = [&](int x) -> int {
 std::cout << f(3);
       \end{lstlisting}      
     \end{block}
+    \pause
+  
+    更多内容移步 \href{https://oi-wiki.org/lang/lambda}{OI-wiki lambda表达式}
   \end{frame}
+
 
   \begin{frame}[fragile]
     \frametitle{随机数 \& shuffle}
@@ -377,21 +384,30 @@ for (auto it : a)
 
   \begin{frame}[fragile]
     \frametitle{零碎的语法糖}
-    \begin{block}{eg.}
-      C++14中 auto可以作为普通函数的返回值
-  
-      C++17中 支持结构化绑定
-  
-      搭配 range-for 使用：
+    
+    C++14中 auto可以作为普通函数的返回值
+
+    \vspace*{1\baselineskip}
+    
+    C++17中 支持结构化绑定
+    
+    搭配 range-for 使用：
+    \begin{block}{e.g.}
       \begin{lstlisting}
 vector<pair<int, int>> v(n);
 for (auto&[x,y] : v) cin>>x>>y;
       \end{lstlisting}
+    \end{block}
+    
+    用于带权图的遍历
 
-      用于带权图的遍历
+  \end{frame}
+  \begin{frame}[fragile]
+    \frametitle{零碎的语法糖}
 
-      C++17中支持省略类型的vector初始化方式
-      例如
+    C++17中支持省略类型的vector初始化方式
+
+    \begin{block}{e.g.}
       \begin{lstlisting}
 int n, m;
 std::cin >> n >> m;
@@ -451,9 +467,11 @@ std::vector a(n, std::vector<int>(m, 1));
 
   \begin{frame}
     \frametitle{前缀和\&差分}
-    还有树上差分+倍增等各种结合做法
-
+    还有树上差分+倍增
+    
     \vspace*{1\baselineskip}
+
+    树状数组 + 差分等等
   \end{frame}
 
   \begin{frame}
@@ -483,7 +501,9 @@ std::vector a(n, std::vector<int>(m, 1));
 
 
     \frametitle{单调栈}
-    看一道题
+    看一道题，\href{https://www.luogu.com.cn/problem/SP1805}{最大子矩形面积}
+
+    \pause
 
     \begin{block}{题意}
       给定长为n的数列a，令$n\leq 10^5,a_i\leq 10^9$
@@ -577,9 +597,9 @@ deque<pair<int,int>>
     \vspace*{1\baselineskip}
 
     \begin{block}{题意}
-      给定$n,m$和不会改变的数组$a\{n\}$，以及$m$个询问
+      给定$n,m$和不会改变的数组$\mathtt{a\{n\}}$，以及$m$个询问
 
-      每次询问给定一个l,r，要求出a[l] - a[r]中的最大值，
+      每次询问给定一个l,r，要求出$\mathtt{a[l] - a[r]}$中的最大值，
       $n\leq 10^5$,$m\leq 2*10^6,a_i\in[0,10^9]$
     \end{block}
   \end{frame}
@@ -587,7 +607,7 @@ deque<pair<int,int>>
   \begin{frame}[fragile]
     \frametitle{倍增 \& ST表}
 
-    如果我们知道了两个区间$[l,r]$和$[L,R]$的最大值，
+    如果我们知道了两个区间$\mathtt{[l,r]}$和$\mathtt{[L,R]}$的最大值，
     这里不妨设$l \leq L \leq r \leq R$
     ，那么就可以得到一个更大的区间,$[l,R]$中的最值
 
@@ -638,22 +658,60 @@ deque<pair<int,int>>
     回过去看 最大子矩形面积 这个问题，
     找到最小值作为决定的边界，然后递归两边
 
+    \vspace*{1\baselineskip}
+
     每个数都会作为区间最小值被计算一次，总复杂度就是ST表的复杂度，
     预处理$\mathtt{O(NlogN)}$，查询$\mathtt{O(1)}$
 
     \vspace*{1\baselineskip}
 
-    \href{http://syh521.cn/file/another-1.cpp}{随便糊的代码}，
-    就测了下小数据，因为HDOJ好像只有C++98能用，感兴趣的同学可以自己
-    去写写试试，我懒得改了
+    \href{http://syh521.cn/file/another-1.cpp}{代码}
+    ，感兴趣的同学可以自己去SPOJ写一下交一下
+
+    \vspace*{1\baselineskip}
 
     这也是个很好的例子，如何把各种STL运用起来
 
 
   \end{frame}
 
+  \begin{frame}[fragile]
+    \frametitle{另一种解法}
+    还是考虑对于每个$\mathtt{a_i}$求出对应的左端点$\mathtt{L}$
+    和右端点$\mathtt{R}$
+
+    \pause
+
+    \vspace*{1\baselineskip}
+    
+    先来处理一个点的左端点，发现似乎存在某种传递关系？
+    
+    \pause
+
+    \vspace*{1\baselineskip}
+    一开始每个点的最左端点都是自身，这毫无疑问，并且如果左端点左边的点$\mathtt{left(i)-1=L}$
+    （如果存在的话）有$\mathtt{a[L]>a_i}$，那么可以把左端点扩展到 $\mathtt{left(L)}$ ，即
+
+    \begin{lstlisting}
+left[i]=i;
+while (left[i]-1 >= 1 && a[left[i]-1]>=a[i])
+  left[i]=left[left[i]-1]
+    \end{lstlisting}
+
+    \pause
+
+    复杂度能过吗？
+
+    \pause
+
+    其实就是合并区间，一共只有n段区间可以合并，显然 $\mathtt{O(N)}$
+  \end{frame}
+
   \begin{frame}
     \frametitle{另一种解法}
+    笛卡尔树也可以解决本题
+
+    感兴趣的同学上OI-wiki自取，内容并不难理解
   \end{frame}
 
   \begin{frame}
@@ -667,6 +725,59 @@ deque<pair<int,int>>
     \frametitle{并查集}
       同上
   \end{frame}
+
+  \section{位运算|预处理瞎扯}
+  \begin{frame}
+    \frametitle{随便扯点}
+    如果有时间的话，看情况，防止内容不够
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{预处理}
+
+    顾名思义，提前处理信息然后重复使用，前缀和，差分都是此种思想的基本手段
+
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{位运算}
+
+    首先是一个 int 有32位，去掉最高位是符号位，有31位可以表示数值
+
+    那么每一位都是0，1，我们可以利用二进制的性质去做一些状态表示
+
+    \begin{block}{example|0-index}
+      除非你能记住优先级并且保证不出bug，不然建议加括号
+
+      移位 $\mathtt{<<\ >>}$
+
+      取出x的第i位 $\mathtt{(x>>i)\&1}$
+
+      消除x的最后一个1 $\mathtt{x\&{(x-1)}}$
+
+      交换两个数字(用于理解) $\mathtt{a\^{} =b\^{} =a\^{} =b}$
+
+    \end{block}
+
+    等等.. 位运算有很多技巧，\href{https://www.zhihu.com/question/38206659}{知乎}
+    上可以找到很多资料，别看营销号就行了
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{预处理}
+    直接对着题目干
+
+    首先是两道昨晚的 Atcoder
+
+    \href{https://atcoder.jp/contests/abc261/tasks/abc261_d}{Atcoder 261D}
+    
+    \href{https://atcoder.jp/contests/abc261/tasks/abc261_e}{Atcoder 261E}
+
+    然后是最近的CF div2.B
+
+    \href{https://codeforces.com/contest/1709/problem/B}{Educational Codeforces Round 132B}
+  \end{frame}
+
 
   \section{作业}
   \begin{frame}
