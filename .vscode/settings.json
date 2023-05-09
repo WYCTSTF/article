@@ -12,4 +12,10 @@
     //     // Haskell
         // "file:///Users/syh/Documents/Graph/haskell2.png",
   ],
+  "workbench.colorTheme": "Brackets Light Pro Bold",
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#192D53",
+    "titleBar.activeBackground": "#223E74",
+    "titleBar.activeForeground": "#FBFCFE"
+  },
 }

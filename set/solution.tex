@@ -1,0 +1,302 @@
+\documentclass{beamer}
+
+\usepackage[english]{babel}
+\usepackage[UTF8]{ctex}              %lualatex用ctex
+% \usepackage[utf8]{inputenc} 
+
+%插入代码
+\usepackage{listings}
+\usepackage{fontspec}
+\setmonofont{Monaco}
+\usepackage{xcolor}
+% 定义可能使用到的颜色
+\definecolor{CPPLight}  {HTML} {686868}
+\definecolor{CPPSteel}  {HTML} {888888}
+\definecolor{CPPDark}   {HTML} {262626}
+\definecolor{CPPBlue}   {HTML} {4172A3}
+\definecolor{CPPGreen}  {HTML} {487818}
+\definecolor{CPPBrown}  {HTML} {A07040}
+\definecolor{CPPRed}    {HTML} {AD4D3A}
+\definecolor{CPPViolet} {HTML} {7040A0}
+\definecolor{CPPGray}  {HTML} {B8B8B8}
+\lstset{
+    columns=fixed,       
+    frame=none,                                          % 不显示背景边框
+    backgroundcolor=\color[RGB]{245,245,244},            % 设定背景颜色
+    keywordstyle=\color[RGB]{40,40,255},                 % 设定关键字颜色
+    numberstyle=\footnotesize\color{darkgray},           % 设定行号格式
+    commentstyle=\it\color[RGB]{0,96,96},                % 设置代码注释的格式
+    stringstyle=\rmfamily\slshape\color[RGB]{128,0,0},   % 设置字符串格式
+    showstringspaces=false,                              % 不显示字符串中的空格
+    language=c++,                                        % 设置语言
+    morekeywords={alignas,continute,friend,register,true,alignof,decltype,goto,
+    reinterpret_cast,try,asm,defult,if,return,typedef,auto,delete,inline,short,
+    typeid,bool,do,int,signed,typename,break,double,long,sizeof,union,case,
+    dynamic_cast,mutable,static,unsigned,catch,else,namespace,static_assert,using,
+    char,enum,new,static_cast,virtual,char16_t,char32_t,explict,noexcept,struct,
+    void,export,nullptr,switch,volatile,class,extern,operator,template,wchar_t,
+    const,false,private,this,while,constexpr,float,protected,thread_local,
+    const_cast,for,public,throw,std},
+    emph={map,set,multimap,multiset,unordered_map,unordered_set,
+    unordered_multiset,unordered_multimap,vector,string,list,deque,
+    array,stack,forwared_list,iostream,memory,shared_ptr,unique_ptr,
+    random,bitset,ostream,istream,cout,cin,endl,move,default_random_engine,
+    uniform_int_distribution,iterator,algorithm,functional,bing,numeric,},
+    emphstyle=\color{CPPViolet},
+    basicstyle=\footnotesize\ttfamily,
+}
+
+
+
+\usepackage{graphicx} %插入图片的宏包
+\usepackage{float} %设置图片浮动位置的宏包
+\usepackage{subfigure} %插入多图时用子图显示的宏包
+% \usepackage[colorlinks,linkcolor=blue]{hyperref}
+
+
+%Theme
+% customize your own color and navigation
+\usetheme[RGB={12 72 66}]{Simple} % color
+\useoutertheme{miniframes}              % navigation
+% \usetheme{Berlin}
+% \usecolortheme{beaver}
+% \input{pkgs.tex}
+
+
+
+\author{沈宇昊}
+\title{LUT 2023ICPC校赛题解}
+\date{\today}
+\institute{兰州理工大学}
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+  % \maketitle
+
+  % \tableofcontents
+  
+
+  % title
+  % \frame[plain]{\titlepage}
+  \begin{frame}[plain]
+    \maketitle
+    % \begin{figure}[htbp] %H为当前位置，!htb为忽略美学标准，htbp为浮动图形
+    % \centering %图片居中
+    % \includegraphics[width=0.3\textheight,height=0.2\textwidth]{graph/shuangye_.png} %插入图片，[]中设置图片大小，{}中是图片文件名
+    % % \caption{双叶天下第一可爱} %最终文档中希望显示的图片标题
+    % % \label{Fig.main2} %用于文内引用的标签
+    % \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Content}
+    \tableofcontents % 这个命令将会显示目录
+  \end{frame}
+
+  \section{begin}
+  \begin{frame}
+    如果你已经写过ICPC区域赛的题，去看过解题报告，或者学某些知识看别人的博客时，往往会碰到别人三言两语讲完一个思路，自己还是一头雾水的情况。
+
+    \vspace*{1\baselineskip}
+    
+    但竞赛的状态就是如此，大部分时候并没有十分精巧且详略得当的最优攻略。
+    
+    \vspace*{1\baselineskip}
+
+    但无需因此止步，或寻求事无巨细的教程而踟蹰不前，或浮夸潦草，人云亦云，复制题解，当个报菜名的大师。二者都是不可取的。
+  \end{frame}
+
+  \begin{frame}
+    这份题解也是同样的道理，只会告诉你解题的方法，但是不会将方法教给你。等待教学固然是一个途径，但是自己有了需求再去努力会更得心应手
+  \end{frame}
+
+  \section{A - 签到题}
+  \begin{frame}
+    编译期
+    $\textmd{a[i]}$的形式会被翻译成$\textmd{*(a+i)}$，展开后不难发现是三次映射
+
+    \vspace*{1\baselineskip}
+
+    得到$\textmd{i[a][a][a]}$等价$\textmd{a[a[a[i]]]}$
+  \end{frame}
+
+  \section{B - 简单的连通问题}
+
+  \begin{frame}
+    如果你不知道图论的\href{https://oi-wiki.org/graph/concept/}{基本概念}
+
+    \vspace*{1\baselineskip}
+    
+    如果你不会\href{https://oi-wiki.org/graph/save/}{存图}
+
+    \vspace*{1\baselineskip}
+    
+    原题地址是 \href{https://atcoder.jp/contests/abc292/tasks/abc292_d}{atcoder292d}，可以去做一下
+
+    \vspace*{1\baselineskip}
+
+    题面出了重大问题，是要考虑重边和自环，而不是不要考虑，原来的明显和样例冲突了
+  \end{frame}
+
+  \begin{frame}
+    正常dfs一遍，把各连通块的点数和边数数一下即可
+
+    \vspace*{1\baselineskip}
+
+    \href{https://syh521.cn/file/at292d.cc}{代码}，仅作参考，对于新手而言还是值得自己写一写的
+  \end{frame}
+
+  \section{C - 小叶的约会}
+  \begin{frame}
+  
+    动态维护两个有序的数列，很容易想到set和二分。
+
+    剩下的，看代码吧....
+
+    \vspace*{1\baselineskip}
+    
+    \href{https://syh521.cn/file/u297129.cc}{代码}
+  \end{frame}
+
+  \section{D - 翘课计划}
+  \begin{frame}
+    树状数组、线段树，甚至因为单点修改的缘故ST表。。一堆都能写。
+
+    \vspace*{1\baselineskip}
+
+    但是有这个必要吗？
+
+    \vspace*{1\baselineskip}
+    
+    考虑一前一后两个数，对于任何大小的$L$，如果后面的数字更大，那么无论什么情况前面的数都不可能成为答案。
+    
+    \vspace*{1\baselineskip}
+    
+    自然的，考虑维护一个答案候选序列，从前往后值依次减小，下标依次增大(单调队列)。
+    
+    \vspace*{1\baselineskip}
+
+    查询的时候因为单调性，二分一个位置即可，不会单调队列的可以看群里之前的课件和录屏
+  \end{frame}
+
+  \begin{frame}
+    单调队列+二分答案,$O(M+M\log{M})$，\href{https://syh521.cn/file/d-bound.cpp}{代码}
+
+    \vspace*{1\baselineskip}
+
+    是否有更简单的做法？
+
+    \pause
+
+    \vspace*{1\baselineskip}
+    
+    考虑并查集，维护单调队列的时候，被更新的值的父亲指向更新他们的值。以此类推，就起到了一个传递的作用。复杂度$\textmd{O(M)}$
+    
+    \vspace*{1\baselineskip}
+
+    自己动手试试！
+  \end{frame}
+
+  \section{E - 简单的异或题}
+
+  \begin{frame}
+    01trie模板题，请自行在OI-wiki学习trie树
+
+    \vspace*{1\baselineskip}
+
+    trie的节点表示状态，而边则是转移的方式。考虑数的二进制，从高到低考虑位数，我们很自然的维护了一个已有的数字的trie，存在各个节点中。
+
+    \vspace*{1\baselineskip}
+    
+    根据异或同0异1的原则，我们拿到新的数字$x$，从高到低的在trie中找每一位和$x$不同的数字，如果找不到则找相同的情况，这必然存在，因为二进制上不是0就是1，考虑32位，肯定会被保存下来。
+
+    \vspace*{1\baselineskip}
+
+    同时因为高位最优，自然满足一个贪心的原则
+
+    \vspace*{1\baselineskip}
+
+    \href{https://syh521.cn/file/e.cpp}{代码}
+  \end{frame}
+
+  \section{F - 简单的数学题}
+
+  \begin{frame}
+    问朋友要的题，一开始把式子看颠倒了。事实上和整除分块没有什么关系，如果交换分子分母好像是个数论分块+前缀和...
+
+    \vspace*{1\baselineskip}
+
+    枚举$\sum$里的东西，然后确定k的上下界算个贡献即可.
+  \end{frame}
+
+  \begin{frame}[fragile]
+\begin{lstlisting}
+long long get(int n) {
+long long res = 0;
+  for (int m = 1; 114 * m * m <= n; m++) {
+    int l = 114 * m * m,
+        r = min(114 * (m + 1) * (m + 1) - 1, n);
+    res += (r - l + 1) * m;
+  }
+  return res;
+}
+\end{lstlisting}
+
+  \pause
+
+  \vspace*{1\baselineskip}
+
+  求一个$\mathtt{get(n+514)-get(n)}$就好了
+  \end{frame}
+
+  \section{G - 牛牛的括号}
+
+  \begin{frame}
+    原题 CSP-S 2019 Day1 T2 括号树
+
+    \vspace*{1\baselineskip}
+    
+    自己找题解看吧.. 写不了就放了
+    
+    \vspace*{1\baselineskip}
+
+    关键在于对一道题的尝试，以此题为例，如果一开始没有任何的思路，那么先考虑纯链的情况，然后是尝试自己写几个样例，试着找找树上的规律。尽可能的去找方向思考，而不是一时半会儿想不到正解就直接去看答案，这样对训练也没有什么效果可言
+  \end{frame}
+
+  \section{end}
+
+  
+  \begin{frame}
+    \frametitle{总结}
+  
+      如果你不会STL，对各种数据结构不熟悉，也不了解C++的各种写法，递归写的也不熟练，甚至不会，这都不是什么大问题。或者看书，或者按洛谷、acwing等OJ的题单教程来熟悉，都是可以的
+      
+      \vspace*{1\baselineskip}
+
+      基础的内容没什么好"学"的，主要靠写题来熟练。
+
+      \vspace*{1\baselineskip}
+
+      真正重要的是克服恐惧心理，勇敢尝试去理解一些陌生的，抽象的概念，发掘其中的乐趣，而不是找借口，或者回避，纵使不打竞赛，干别的事情，搞项目，学技术，也是同样的道理。
+  
+  \end{frame}
+
+  \begin{frame}
+    至于平时的训练，该不该看题解。一道题要想多久看题解，诸如此类的问题，自己写的时间久了自然会有答案，我个人的建议是思考15分钟左右。当然还是酌情，掌握了一定知识、套路的情况下可以多想一想。
+
+    \vspace*{1\baselineskip}
+    
+    另外，训练的时候要避免眼高手低。切忌没有怎么训练就搞总结性发言，动辄不做模板题，想着要练所谓的“思维”，然而真要从空的cpp开始ac一个套路题，又不能成功，这不是一件好事。
+    
+    \vspace*{1\baselineskip}
+
+    希望这场比赛对你有所帮助
+  \end{frame}
+\end{document}

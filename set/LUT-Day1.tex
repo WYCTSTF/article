@@ -1,0 +1,806 @@
+\documentclass{beamer}
+
+\usepackage[english]{babel}
+\usepackage[UTF8]{ctex}              %lualatex用ctex
+% \usepackage[utf8]{inputenc} 
+
+%插入代码
+\usepackage{listings}
+\usepackage{fontspec}
+\setmonofont{Monaco}
+\usepackage{xcolor}
+% 定义可能使用到的颜色
+\definecolor{CPPLight}  {HTML} {686868}
+\definecolor{CPPSteel}  {HTML} {888888}
+\definecolor{CPPDark}   {HTML} {262626}
+\definecolor{CPPBlue}   {HTML} {4172A3}
+\definecolor{CPPGreen}  {HTML} {487818}
+\definecolor{CPPBrown}  {HTML} {A07040}
+\definecolor{CPPRed}    {HTML} {AD4D3A}
+\definecolor{CPPViolet} {HTML} {7040A0}
+\definecolor{CPPGray}  {HTML} {B8B8B8}
+\lstset{
+    columns=fixed,       
+    frame=none,                                          % 不显示背景边框
+    backgroundcolor=\color[RGB]{245,245,244},            % 设定背景颜色
+    keywordstyle=\color[RGB]{40,40,255},                 % 设定关键字颜色
+    numberstyle=\footnotesize\color{darkgray},           % 设定行号格式
+    commentstyle=\it\color[RGB]{0,96,96},                % 设置代码注释的格式
+    stringstyle=\rmfamily\slshape\color[RGB]{128,0,0},   % 设置字符串格式
+    showstringspaces=false,                              % 不显示字符串中的空格
+    language=c++,                                        % 设置语言
+    morekeywords={alignas,continute,friend,register,true,alignof,decltype,goto,
+    reinterpret_cast,try,asm,defult,if,return,typedef,auto,delete,inline,short,
+    typeid,bool,do,int,signed,typename,break,double,long,sizeof,union,case,
+    dynamic_cast,mutable,static,unsigned,catch,else,namespace,static_assert,using,
+    char,enum,new,static_cast,virtual,char16_t,char32_t,explict,noexcept,struct,
+    void,export,nullptr,switch,volatile,class,extern,operator,template,wchar_t,
+    const,false,private,this,while,constexpr,float,protected,thread_local,
+    const_cast,for,public,throw,std},
+    emph={map,set,multimap,multiset,unordered_map,unordered_set,
+    unordered_multiset,unordered_multimap,vector,string,list,deque,
+    array,stack,forwared_list,iostream,memory,shared_ptr,unique_ptr,
+    random,bitset,ostream,istream,cout,cin,endl,move,default_random_engine,
+    uniform_int_distribution,iterator,algorithm,functional,bing,numeric,},
+    emphstyle=\color{CPPViolet},
+    basicstyle=\footnotesize\ttfamily,
+}
+
+
+
+\usepackage{graphicx} %插入图片的宏包
+\usepackage{float} %设置图片浮动位置的宏包
+\usepackage{subfigure} %插入多图时用子图显示的宏包
+
+
+
+%Theme
+% customize your own color and navigation
+\usetheme[RGB={12 72 66}]{Simple} % color
+\useoutertheme{miniframes}              % navigation
+% \usetheme{Berlin}
+% \usecolortheme{beaver}
+% \input{pkgs.tex}
+
+
+
+\author{syh.hs}
+\title{LUT-ICPC Day 1 语法\&基础算法-1}
+\date{\today}
+\institute{兰州理工大学}
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+  % \maketitle
+
+  % \tableofcontents
+  
+
+  % title
+  % \frame[plain]{\titlepage}
+  \begin{frame}[plain]
+    \maketitle
+    \begin{figure}[htbp] %H为当前位置，!htb为忽略美学标准，htbp为浮动图形
+    \centering %图片居中
+    \includegraphics[width=0.3\textheight,height=0.2\textwidth]{graph/new- 2.jpg} %插入图片，[]中设置图片大小，{}中是图片文件名
+    % \caption{双叶天下第一可爱} %最终文档中希望显示的图片标题
+    % \label{Fig.main2} %用于文内引用的标签
+    \end{figure}
+  \end{frame}
+
+  % \begin{frame}
+  %   \frametitle{Content}
+  %   \tableofcontents % 这个命令将会显示目录
+  % \end{frame}
+  
+  \section{前置}
+
+  \begin{frame}
+    \frametitle{知识准备}
+    基础的递归、模拟
+
+    基本时间复杂度会看，有概念
+
+    会写暴力
+
+    视情况而定，哪里需要补充哪里的知识，临时讲一下即可
+  \end{frame}
+  \begin{frame}
+    \frametitle{训练}
+    \href{https://en.cppreference.com/w/}{C++ Reference}
+
+    \href{https://oi-wiki.org/}{OI Wiki}
+
+    知乎
+
+    每场CF的题解 \& 评论区，大佬的过题代码
+
+    \vspace*{1\baselineskip}
+    
+    上述有不懂的进一步百度 | Google、交流，主要是坚持做题，少做水题、一眼题
+    
+    \vspace*{1\baselineskip}
+    
+    各种比赛省赛级别获奖对比赛经验和知识准备要求不高，当然之后如果甘肃有ICPC的省赛，和兰大同台竞技另说、、
+    
+    \vspace*{1\baselineskip}
+
+    像ZJ等省份，XCPC有省赛，拿金的难度可能还要大于区域银
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{题单}
+    \href{https://www.luogu.com.cn/training/list?type=official&page=1}{洛谷官方题单}
+
+    \href{https://www.luogu.com.cn/training/2018}{2020,2021CF简单题精选} 适合有基础之后提高
+
+    \vspace*{1\baselineskip}
+    
+    \href{https://www.luogu.com.cn/training/9376}{搜索题单}
+    
+    \vspace*{1\baselineskip}
+    
+    关于做题和看题解.. 不会做看题解是正常的，尽量是一点点看，理解思路，然后尝试自己写出，不行再看代码，理解了之后再写，注意抄题解和看题解的区分，没有太多思考内容的题一般10-15min
+  \end{frame}
+
+  \section{cpp98 \texorpdfstring{$\to$}\ cpp11}
+
+  \begin{frame}
+    \frametitle{summary}
+    特定函数的部分主要看的是这篇
+    \href{https://www.luogu.com.cn/blog/AccRobin/grammar-candies}{洛谷日报}
+  
+    \vspace*{2\baselineskip}
+  
+    模板，别的各种内容来自平时整理
+  
+  \end{frame}
+  
+  \begin{frame}
+    \frametitle{algorithm库}
+    常见的函数有swap,sort,unique,reverse,lower\_bound,upper\_bound等...
+    
+    一些别的函数
+
+    std::find
+
+    std::fill 一般用来弥补memset不能赋值的问题
+
+    std::max\_element | min\_element (bg, ed) 第三个参数可传入比较函数
+
+    std::count(bg,ed,val)
+  
+    std::count\_if(bg,ed,func) 常用func有isdigit,islower,isupper等
+
+    std::for\_each(bg, ed, func)
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{numeric库}
+    \begin{block}{std::accumulate(bg, ed, val)}
+      可以用于序列求和，注意传参时val的类型避免溢出，第四个参数可以作为加法
+    \end{block}
+
+    \begin{block}{std::partial\_sum(bg1, ed1, bg2)}
+      用于求前缀和，可以传入第四个参数作加法
+    \end{block}
+
+    \begin{block}{std::adjacent\_difference(bg1, ed1, bg2)}
+      用于求差分，可以传入第四个参数作减法
+    \end{block}
+    
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{cmath库}
+      \begin{block}{exp(x)}
+        返回 $e^x$，$x$的有效范围是 $[−708.4,709.8]$
+      \end{block}
+
+      \begin{block}{log(x)}
+        返回 $\ln{x}$，在 $x\leq0$时候报错，别的还有$log10$和$log2$，其中$log2$为C++11开始才有
+      \end{block}
+
+      floor 取上整
+
+      ceil 取下整
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{GNU}
+
+    这些内容不在C++标准中，如clang等其他编译器里可能没有，一般比赛提供的编译器都是GUN C++，也就是你们dev里面自带的mingw(Minimalist GNU for Windows)
+    
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{GNU}
+
+    \begin{block}{\_\_builtin 函数}
+
+      \_\_builtin\_popcount(x) 统计二进制下x中1的个数
+
+      \vspace*{1\baselineskip}
+      
+      \_\_builtin\_parity(x) 统计二进制下x中1个数的奇偶性
+      
+      \vspace*{1\baselineskip}
+      
+      \_\_builtin\_ffs(x) 统计二进制下最后一个1是从左往右第几位
+      
+      \vspace*{1\baselineskip}
+      
+      \_\_builtin\_ctz(x) 返回二进制下后导0的个数
+      
+      \vspace*{1\baselineskip}
+      
+      \_\_builtin\_clz(x) 返回二进制下前导0的个数
+    \end{block}
+    
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{..}
+      大多函数其实也没啥用，主要是压行，节省时间
+
+      Codeforces打多了就能感受到
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{lambda表达式}
+    \begin{block}{example}
+      作用是提供一个匿名函数
+      
+      sort(a.begin(), a.end(), [\&](type a, type b) {return ..});
+
+      这里与手写一个cmp填入作用相同
+    \end{block}
+
+    \begin{block}{definition}
+      [ captures ] ( params ) specifiers(可选) -> ret(可选) { body }
+      captures：捕获外部变量列表。
+
+      params：形参列表。
+      
+      specifiers：指定符序列。C++11 中常用的为 mutable（允许 body 修改以值捕获的参数）。
+      
+      ret：返回类型。若省略则由函数的 return 语句所隐含（或如函数不返回任何值则为 void）。
+      
+      body：函数体。
+    \end{block}
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{lambda表达式}
+    竞赛里一般不考虑specifier
+
+    \begin{block}{example}
+      \begin{lstlisting}
+int factorA = 1, factorB = 3;
+std::vector<int> c(10);
+std::iota(c.begin(), c.end(), 0);
+for (auto it = c.begin(); it != c.end(); ++it)
+  std::cout << *it << " \n"[it == std::prev(c.end())];
+for_each(c.begin(), c.end(), [&](int &x) {
+  x += factorA & factorB;
+});
+for (auto it : c)
+  std::cout << it << ' ';
+        
+      \end{lstlisting}
+
+    \end{block}
+
+    提一嘴vector<bool>，这个东西不建议使用，具体原因知乎搜索
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{lambda表达式}
+    另一种方式是关于递归，如何调用自己的问题
+    \begin{block}{example}
+      \begin{lstlisting}
+auto sum = [](auto self, int x) -> int {
+  return x == 1 ? 1 : x + self(self, x - 1);
+};
+
+std::cout << sum(sum, 10);
+      \end{lstlisting}
+
+    \end{block}
+
+    一种方法是用固定的auto格式
+    
+    不过记得标明类型，否则可能自动推导失败
+
+    \vspace*{1\baselineskip}
+
+    而且从c++14开始才支持lambda中参数类型有auto，
+    所以如果你要是c++11这么写递归就完了，比方说某绿桥杯、、
+  \end{frame}
+
+
+  \begin{frame}[fragile]
+    \frametitle{lambda表达式}
+
+    因为上述问题，所以我们想要在C++11中使用lambda的递归，需要用std::function封装该匿名函数
+
+    \begin{block}{example}
+      \begin{lstlisting}
+std::function<int(int)> f = [&](int x) -> int {
+  return x == 1 ? 1 : x + f(x - 1);
+};
+std::cout << f(3);
+      \end{lstlisting}      
+    \end{block}
+    \pause
+  
+    更多内容移步 \href{https://oi-wiki.org/lang/lambda}{OI-wiki lambda表达式}
+  \end{frame}
+
+
+  \begin{frame}[fragile]
+    \frametitle{随机数 \& shuffle}
+    \begin{block}{definition}
+  
+      mt19937是一个随机数生成器类
+
+      shuffle 需要提供头尾迭代器和一个随机数生成器作为参数
+
+      随机数生成器需要一个种子来产生一个随机数，种子不同，随机结果才会不同
+
+      一般用1970年(Unix纪元)至今秒数作为种子
+      
+      \begin{lstlisting}  
+std::vector<int> a(10);
+std::iota(a.begin(), a.end(), 0);
+std::mt19937 myrand(time(0));
+std::shuffle(a.begin(), a.end(), myrand);
+for (auto it : a)
+  std::cout << it << ' ';
+      \end{lstlisting}
+    \end{block}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{模板}
+      \begin{block}{关于template}
+        知道template<typename T> $\mid$ template<class T>
+        这两种比较基本的形式就可以，更多的知识和一些魔法技巧自行了解
+      \end{block}
+  \end{frame}
+
+  \section{cpp14 \texorpdfstring{$\to$}\ cpp17}
+
+  \begin{frame}[fragile]
+    \frametitle{零碎的语法糖}
+    
+    C++14中 auto可以作为普通函数的返回值
+
+    \vspace*{1\baselineskip}
+    
+    C++17中 支持结构化绑定
+    
+    搭配 range-for 使用：
+    \begin{block}{e.g.}
+      \begin{lstlisting}
+vector<pair<int, int>> v(n);
+for (auto&[x,y] : v) cin>>x>>y;
+      \end{lstlisting}
+    \end{block}
+    
+    用于带权图的遍历
+
+  \end{frame}
+  \begin{frame}[fragile]
+    \frametitle{零碎的语法糖}
+
+    C++17中支持省略类型的vector初始化方式
+
+    \begin{block}{e.g.}
+      \begin{lstlisting}
+int n, m;
+std::cin >> n >> m;
+std::vector a(n, std::vector<int>(m, 1));
+      \end{lstlisting}
+    \end{block}
+  \end{frame}
+
+  \begin{frame}
+    如果有想了解C++17的可以看
+
+    C++17 in Detail
+  \end{frame}
+
+  \section{基础数据结构}
+
+  \begin{frame}
+    \frametitle{扯淡}
+
+    语言特性的权重在竞赛学习中很低，只能起到锦上添花的作用，关键还是把题目做出来
+
+    \vspace*{1\baselineskip}
+
+    还有就是关于贪心、DP这一类思维题，最好直接Codeforces找greedy dp的标签，按照自身rating+200分的题开始做，别在概括性的套话和水题上纠结
+
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{扯淡}
+
+    模拟题、字符串题怎么训练？
+
+    \vspace*{1\baselineskip}
+
+    打开Codeforces，点开Problem Set，加上对应tag，找合适分段的题目做
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{前缀和\&差分}
+
+    \begin{block}{前缀和}
+      pre[i] = pre[i-1] + a[i]
+      
+      或者
+
+      pre[i] = pre[i-1] xor a[i]
+    \end{block}
+
+    \begin{block}{二维前缀和}
+      pre[i][j] = pre[i-1][j]+pre[i][j-1]-pre[i-1][j-1]+a[i][j]
+    \end{block}
+
+    \begin{block}{差分}
+      minus[i] = a[i] - a[i-1]
+    \end{block}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{前缀和\&差分}
+    还有树上差分+倍增
+    
+    \vspace*{1\baselineskip}
+
+    树状数组 + 差分等等
+  \end{frame}
+
+  \begin{frame}
+
+    开始单调线性结构，别的内容还有很多，有经验了之后自己去看wiki看文档吧..
+    
+    \vspace*{1\baselineskip}
+
+    \frametitle{单调栈}
+
+    (看情况给5-10min思考..)
+
+    其实比较局限，只能解决一类很固定的问题
+
+    因此也很容易看出来233
+
+    \vspace*{1\baselineskip}
+    
+    \href{https://www.luogu.com.cn/problem/P5788}{模板题}
+
+    \vspace*{1\baselineskip}
+
+    \href{http://syh521.cn/file/monotone-stack.cpp}{对应代码}
+  \end{frame}
+
+  \begin{frame}
+
+
+    \frametitle{单调栈}
+    看一道题，\href{https://www.luogu.com.cn/problem/SP1805}{最大子矩形面积}
+
+    \pause
+
+    \begin{block}{题意}
+      给定长为n的数列a，令$n\leq 10^5,a_i\leq 10^9$
+  
+      $\mathtt{sum=(r-l+1)*Min,Min=min\{a_i\mid i\in [l,r]\}}$，要求$\mathtt{sum}$的最大值
+
+    \end{block}
+    \pause
+    问题的实质是啥
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{单调栈}
+    
+    对于每个i，我们希望找到对应的[l,r]，保证a[l],a[l+1],$\cdots$,a[r]都大于等于a[i]
+
+    \pause
+
+    \vspace*{1\baselineskip}
+    
+    不难意识到两个单调栈就能解决该问题
+    
+    \pause
+    
+    \vspace*{1\baselineskip}
+
+    自己动手试试！
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{单调队列}
+
+    \href{https://www.luogu.com.cn/problem/P1886}{模板题}
+
+    \begin{block}{题意}
+      给定长为$n$的序列$a$，以及一个$k$，窗口从$[1,k]$一直滑动到$[n-k+1,n]$
+
+      我们想知道每次窗口内的最大 / 最小值
+    \end{block}
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{单调队列}
+    以求解最大值为例
+
+    可以发现，当前区间内靠后的，偏大的数字，比靠前的且偏小的数字要好，我们可以不保存后者
+
+    \pause
+
+    \vspace*{1\baselineskip}
+
+    如果要保存靠前的数字，那么一定是他比后面的数字大
+
+    \pause
+
+    那么像是搞一个单调递减，下标递增的序列，类似
+    \begin{lstlisting}
+deque<pair<int,int>>
+    \end{lstlisting}
+    ，来维护区间最大值
+
+    \pause
+
+    对于新来的一个数$x$
+    ，我们要不停的扔掉队列末端比$x$小的数，因为那些已经没有了保存的价值
+    ，这样就维护了一个单调性
+
+    \vspace*{1\baselineskip}
+
+    同时检索头部的元素是否还在区间内，不在就pop掉
+  \end{frame}
+
+  \begin{frame}
+    “如果一个选手比你小还比你强，你就可以退役了。”
+    \rightline{——单调队列原理[doge]}
+    
+    \vspace*{1\baselineskip}
+    
+    \href{http://syh521.cn/file/monotone-queue.cpp}{代码}
+    
+    \vspace*{1\baselineskip}
+
+    单调队列可以维护左右端点都向一个方向移动时的区间最值，
+    这个性质常用来做动态规划的优化
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{倍增 \& ST表}
+    \href{https://www.luogu.com.cn/problem/P3865}{ST表模板题}
+
+    \vspace*{1\baselineskip}
+
+    \begin{block}{题意}
+      给定$n,m$和不会改变的数组$\mathtt{a\{n\}}$，以及$m$个询问
+
+      每次询问给定一个l,r，要求出$\mathtt{a[l] - a[r]}$中的最大值，
+      $n\leq 10^5$,$m\leq 2*10^6,a_i\in[0,10^9]$
+    \end{block}
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{倍增 \& ST表}
+
+    如果我们知道了两个区间$\mathtt{[l,r]}$和$\mathtt{[L,R]}$的最大值，
+    这里不妨设$l \leq L \leq r \leq R$
+    ，那么就可以得到一个更大的区间,$[l,R]$中的最值
+
+    \pause
+
+    \vspace*{1\baselineskip}
+
+    我们在有了预处理基础的条件上，这里就是a[i]=0
+    ，然后传递关系的时候成倍增长，即
+    \begin{align*}
+      \mathtt{max\{a[l,l+2^i-1]\}=max(}
+      &\mathtt{max\{a[l,l+2^{i-1}-1]\},} \\
+      & \mathtt{max\{a[l+2^{i-1},l+2^i-1]\})}
+    \end{align*}
+
+    我们设$\mathtt{f[i][j]}$表示 $\mathtt{[l,l+2^j-1]}$中的最大值，
+    显然有
+    $\mathtt{f[i][j]=max\{f[i][j-1],f[i+2^{j-1}][j-1]\}}$
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{倍增 \& ST表}
+    \begin{block}{如何查询}
+      对于给定的[L,R]，我们要怎么查询最值？
+    \end{block}
+
+    \pause
+
+    预处理 $\mathtt{log_2}$ 数组，或者调函数，
+    令 $\mathtt{d=log_2{(R-L+1)}}$
+
+    询问$\mathtt{max(f[L][d],f[L+2^d][d])}$即可
+
+    \vspace*{1\baselineskip}
+    
+    这种预处理信息时成倍增长的手段，就叫倍增
+
+    \vspace*{1\baselineskip}
+
+    \href{http://syh521.cn/file/st-table.cpp}{代码}
+
+    注意C++中位运算的优先级比加减要低，不确定时加上括号
+  \end{frame}
+
+
+  \begin{frame}
+    \frametitle{另一种解法-ST表}
+    回过去看 最大子矩形面积 这个问题，
+    找到最小值作为决定的边界，然后递归两边
+
+    \vspace*{1\baselineskip}
+
+    每个数都会作为区间最小值被计算一次，总复杂度就是ST表的复杂度，
+    预处理$\mathtt{O(NlogN)}$，查询$\mathtt{O(1)}$
+
+    \vspace*{1\baselineskip}
+
+    \href{http://syh521.cn/file/another-1.cpp}{代码}
+    ，感兴趣的同学可以自己去SPOJ写一下交一下
+
+    \vspace*{1\baselineskip}
+
+    这也是个很好的例子，如何把各种STL运用起来
+
+
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{另一种解法}
+    还是考虑对于每个$\mathtt{a_i}$求出对应的左端点$\mathtt{L}$
+    和右端点$\mathtt{R}$
+
+    \pause
+
+    \vspace*{1\baselineskip}
+    
+    先来处理一个点的左端点，发现似乎存在某种传递关系？
+    
+    \pause
+
+    \vspace*{1\baselineskip}
+    一开始每个点的最左端点都是自身，这毫无疑问，并且如果左端点左边的点$\mathtt{left(i)-1=L}$
+    （如果存在的话）有$\mathtt{a[L]>a_i}$，那么可以把左端点扩展到 $\mathtt{left(L)}$ ，即
+
+    \begin{lstlisting}
+left[i]=i;
+while (left[i]-1 >= 1 && a[left[i]-1]>=a[i])
+  left[i]=left[left[i]-1]
+    \end{lstlisting}
+
+    \pause
+
+    复杂度能过吗？
+
+    \pause
+
+    其实就是合并区间，一共只有n段区间可以合并，显然 $\mathtt{O(N)}$
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{另一种解法}
+    笛卡尔树也可以解决本题
+
+    感兴趣的同学上OI-wiki自取，内容并不难理解
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{堆}
+      根据时间和观众意愿决定讲不讲
+
+      用OI-wiki和写过的博客凑合一下，这里不写内容了..
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{并查集}
+      同上
+  \end{frame}
+
+  \section{位运算|预处理瞎扯}
+  \begin{frame}
+    \frametitle{随便扯点}
+    如果有时间的话，看情况，防止内容不够
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{预处理}
+
+    顾名思义，提前处理信息然后重复使用，前缀和，差分都是此种思想的基本手段
+
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{位运算}
+
+    首先是一个 int 有32位，去掉最高位是符号位，有31位可以表示数值
+
+    那么每一位都是0，1，我们可以利用二进制的性质去做一些状态表示
+
+    \begin{block}{example|0-index}
+      除非你能记住优先级并且保证不出bug，不然建议加括号
+
+      移位 $\mathtt{<<\ >>}$
+
+      取出x的第i位 $\mathtt{(x>>i)\&1}$
+
+      消除x的最后一个1 $\mathtt{x\&{(x-1)}}$
+
+      交换两个数字(用于理解) $\mathtt{a\^{} =b\^{} =a\^{} =b}$
+
+    \end{block}
+
+    等等.. 位运算有很多技巧，\href{https://www.zhihu.com/question/38206659}{知乎}
+    上可以找到很多资料，别看营销号就行了
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{预处理}
+    直接对着题目干
+
+    首先是两道昨晚的 Atcoder
+
+    \href{https://atcoder.jp/contests/abc261/tasks/abc261_d}{Atcoder 261D}
+    
+    \href{https://atcoder.jp/contests/abc261/tasks/abc261_e}{Atcoder 261E}
+
+    然后是最近的CF div2.B
+
+    \href{https://codeforces.com/contest/1709/problem/B}{Educational Codeforces Round 132B}
+  \end{frame}
+
+
+  \section{作业}
+  \begin{frame}
+    \frametitle{写题}
+    Codeforces Div.2 / Div. 3泛做，无难度要求，自己看着搞
+
+    \vspace*{1\baselineskip}
+    
+    洛谷或其他平台上相关题目的练习
+
+    \vspace*{1\baselineskip}
+
+    晚上抽出时间打CF，如果早睡早起的可以virtual participation
+  \end{frame}
+
+  \begin{frame}[fragile]
+    \frametitle{格式要求}
+
+    写解题报告，每道题要有题目链接｜来源、解题思路(随便写两句说的对就行)、代码
+
+    \vspace*{1\baselineskip}
+    
+    可以是word，\LaTeX/Markdown生成pdf，博客，acwing打卡等任意形式
+
+    \vspace*{1\baselineskip}
+
+    没有数量要求，一周交，自愿为主，只做题不写也可
+  \end{frame}
+
+\end{document}
